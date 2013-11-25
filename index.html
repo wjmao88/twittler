@@ -3,25 +3,78 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" type="text/css" href="twittler.css">
   </head>
   <body>
     <script>
+      var logsOn = false;
+      var maxTweets = 20;
+      var lastUpdatedTime;
+      var lastUpdatedBy;
 
+      log('start');
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
-
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
-
+        log('first update');
+        update();
+        setInterval(function(){
+            update();
+        }, 10000);
       });
 
+      function update(){
+        var $newHolder = $('.newHolder');
+        var $oldHolder = $('.oldHolder');
+        var $archive = $('.archiveHolder');
+        //move former new tweets to old tweets
+        log('moving old');
+        while ($newHolder.children().length > 0){
+          $newHolder.children().last().prependTo($oldHolder);
+        }
+        //move excess tweets to archive
+        log('archiving');
+        while ($oldHolder.children().length > maxTweets){
+          $archive.prepend($oldHolder.children().last());
+        }
+        //get new tweets
+        log('new tweets');
+        var index = streams.home.length - 1;
+        while (index >= 0 && 
+                (streams.home[index].created_at > lastUpdatedTime || 
+                  (streams.home[index].created_at == lastUpdatedTime && streams.home[index].user != lastUpdatedBy))) {
+          $newHolder.append(makeTweet(streams.home[index]));
+          index -= 1;
+        } 
+        lastUpdatedTime = streams.home[streams.home.length - 1].created_at;
+        lastUpdatedBy = streams.home[streams.home.length - 1].user;
+      }
+
+      function makeTweet(tweet){
+        var $tweet = $('<div></div>');
+        $tweet.text(timeStamp(tweet.created_at) + '|@' + tweet.user + ': ' + tweet.message);
+        return $tweet;
+      }
+
+      function timeStamp(time){
+        return time.toString();
+      }
+
+      function log(msg) {
+        setTimeout(function() {
+          if(logsOn) {
+            throw new Error(msg);
+          }
+        }, 0);
+      }
     </script>
+    <!-- content -->
+    <div class="profile">
+
+    </div>
+    <div class="holder newHolder">
+    </div>
+    <div class="holder oldHolder">
+    </div>
+    <div class="holder archiveHolder">
+    </div>
   </body>
 </html>
