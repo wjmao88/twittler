@@ -7,15 +7,19 @@
   </head>
   <body>
     <script>
-      var logsOn = false;
-      var maxTweets = 20;
-      var lastUpdatedTime;
-      var lastUpdatedBy;
+      var logsOn = true;
+
+      var twittlerScope = {};
+      twittlerScope.maxTweets = 20;
+      twittlerScope.lastUpdatedTime = 0;
+      twittlerScope.lastUpdatedBy = '';
 
       log('start');
       $(document).ready(function(){
-        log('first update');
-        update();
+        setTimeout(function(){
+          log('first update'); 
+          update()
+        }, 1000);
         setInterval(function(){
             update();
         }, 10000);
@@ -32,25 +36,28 @@
         }
         //move excess tweets to archive
         log('archiving');
-        while ($oldHolder.children().length > maxTweets){
+        while ($oldHolder.children().length > twittlerScope.maxTweets){
           $archive.prepend($oldHolder.children().last());
         }
         //get new tweets
         log('new tweets');
         var index = streams.home.length - 1;
         while (index >= 0 && 
-                (streams.home[index].created_at > lastUpdatedTime || 
-                  (streams.home[index].created_at == lastUpdatedTime && streams.home[index].user != lastUpdatedBy))) {
+                (streams.home[index].created_at > twittlerScope.lastUpdatedTime || 
+                  (streams.home[index].created_at == twittlerScope.lastUpdatedTime && streams.home[index].user != twittlerScope.lastUpdatedBy))) {
           $newHolder.append(makeTweet(streams.home[index]));
           index -= 1;
         } 
-        lastUpdatedTime = streams.home[streams.home.length - 1].created_at;
-        lastUpdatedBy = streams.home[streams.home.length - 1].user;
+        twittlerScope.lastUpdatedTime = streams.home[streams.home.length - 1].created_at;
+        twittlerScope.lastUpdatedBy = streams.home[streams.home.length - 1].user;
       }
 
       function makeTweet(tweet){
-        var $tweet = $('<div></div>');
-        $tweet.text(timeStamp(tweet.created_at) + '|@' + tweet.user + ': ' + tweet.message);
+        var $tweet = $('<div class="tweet"></div>');
+        var tweetText = '';
+        $tweet.append($('<div class="tweetTime">' + timeStamp(tweet.created_at) + '</div>'));
+        $tweet.append($('<div class="tweetUser">' + tweet.user + '</div>'));
+        $tweet.append($('<div class="tweetContent">' + tweet.message + '</div>'));
         return $tweet;
       }
 
@@ -67,14 +74,24 @@
       }
     </script>
     <!-- content -->
-    <div class="profile">
-
+    <div class="header">
+      Twttler
     </div>
-    <div class="holder newHolder">
+    <div class="leftPanel">
+      <div class="profile">
+        name and stuff
+      </div>
+      <div class="menu">
+        options and stuff
+      </div>
     </div>
-    <div class="holder oldHolder">
-    </div>
-    <div class="holder archiveHolder">
+    <div class="main">
+      <div class="holder newHolder">
+      </div>
+      <div class="holder oldHolder">
+      </div>
+      <div class="holder archiveHolder">
+      </div>
     </div>
   </body>
 </html>

@@ -1,8 +1,44 @@
-body{
-  
+.hide{
+  display: none;
+}
+
+.header{
+  border: solid;
+  border-color: black;
+}
+
+.leftPanel{
+  float:left;
+  width: 200px;
+
+    border: solid;
+  border-color: black;
+}
+
+.main{
+  float:left;
+
+    border: solid;
+  border-color: black;
+}
+
+.profile{
+
+  border: solid;
+  border-color: black;
 }
 
 .holder{
-  border: solid;
-  border-color: red;
+
+    border: solid;
+  border-color: black;
+}
+
+.tweet{
+  border:solid;
+  border-color: blue;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 5px 5px 5px 5px;
 }
