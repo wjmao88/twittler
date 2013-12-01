@@ -2,36 +2,66 @@
   display: none;
 }
 
+
+.page{
+  width: 800px;
+  float: left;
+}
+
 .header{
-  border: solid;
-  border-color: black;
+  background-color: red;
 }
 
 .leftPanel{
   float:left;
-  width: 200px;
-
-    border: solid;
-  border-color: black;
+  width: 300px;
 }
 
 .main{
   float:left;
-
-    border: solid;
-  border-color: black;
+  width: 500px;
 }
 
 .profile{
+  background-color: blue;
+}
 
-  border: solid;
-  border-color: black;
+.optionList{
+  background-color: yellow;
+}
+
+.userList{
+  background-color: cyan;
+}
+
+.userToggle{
+  background-color: grey;
+}
+
+.userList > .toggleShow{
+  background-color: green;
 }
 
 .holder{
 
-    border: solid;
-  border-color: black;
+}
+
+.newHolder{
+  border: solid;
+  border-color: blue;
+  border-radius: 10px;
+}
+
+.newHolder > .tweet{
+  background-color: cyan;
+}
+
+.oldHolder > .tweet{
+  background-color: magenta;
+}
+
+.archiveHolder > .tweet{
+  background-color: grey;
 }
 
 .tweet{

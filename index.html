@@ -13,17 +13,32 @@
       twittlerScope.maxTweets = 20;
       twittlerScope.lastUpdatedTime = 0;
       twittlerScope.lastUpdatedBy = '';
+      twittlerScope.users = [];
 
       log('start');
       $(document).ready(function(){
         setTimeout(function(){
           log('first update'); 
           update()
-        }, 1000);
+        }, 3000);
         setInterval(function(){
             update();
         }, 10000);
+
+        $('.userToggle.allUser').click(function(){
+          userListingClick($('.userToggle'), $('.tweet'));
+        })
       });
+
+      function userListingClick(users, tweets, ar){
+        users.toggleClass('toggleShow', !users.first().hasClass('toggleShow'));
+        log(users.size() + '|' + users.hasClass('toggleShow'));
+        if (users.first().hasClass('toggleShow')) {
+          tweets.show();
+        } else {
+          tweets.hide();
+        }
+      }
 
       function update(){
         var $newHolder = $('.newHolder');
@@ -46,6 +61,14 @@
                 (streams.home[index].created_at > twittlerScope.lastUpdatedTime || 
                   (streams.home[index].created_at == twittlerScope.lastUpdatedTime && streams.home[index].user != twittlerScope.lastUpdatedBy))) {
           $newHolder.append(makeTweet(streams.home[index]));
+          if ($('.userToggle.' + streams.home[index].user).size() == 0){
+            var $newUser = makeUserListing(streams.home[index].user);
+            $newUser.data('name', streams.home[index].user);
+            $('.userList').append($newUser);
+            $newUser.click(function(){
+              userListingClick($(this), $('.tweet.' + $(this).data('name')))
+            });
+          }
           index -= 1;
         } 
         twittlerScope.lastUpdatedTime = streams.home[streams.home.length - 1].created_at;
@@ -53,12 +76,16 @@
       }
 
       function makeTweet(tweet){
-        var $tweet = $('<div class="tweet"></div>');
+        var $tweet = $('<div class="tweet ' + tweet.user + '"></div>');
         var tweetText = '';
         $tweet.append($('<div class="tweetTime">' + timeStamp(tweet.created_at) + '</div>'));
         $tweet.append($('<div class="tweetUser">' + tweet.user + '</div>'));
         $tweet.append($('<div class="tweetContent">' + tweet.message + '</div>'));
         return $tweet;
+      }
+
+      function makeUserListing(username){
+        return ($('<div class="userToggle ' + username + ' toggleShow">' + username + '</div>'));
       }
 
       function timeStamp(time){
@@ -74,23 +101,29 @@
       }
     </script>
     <!-- content -->
-    <div class="header">
-      Twttler
-    </div>
-    <div class="leftPanel">
-      <div class="profile">
-        name and stuff
+    <div class="page">
+      <div class="header">
+        Twttler
       </div>
-      <div class="menu">
-        options and stuff
+      <div class="leftPanel">
+        <div class="profile">
+          name and stuff
+        </div>
+        <div class="optionList">
+          options and stuff
+        </div>
+        <div class="userList">
+          <div class="userToggle allUser toggleShow">All Users</div> 
+        </div>
       </div>
-    </div>
-    <div class="main">
-      <div class="holder newHolder">
-      </div>
-      <div class="holder oldHolder">
-      </div>
-      <div class="holder archiveHolder">
+      <div class="main">
+        <div class="holder newHolder">
+          New
+        </div>
+        <div class="holder oldHolder">
+        </div>
+        <div class="holder archiveHolder hide">
+        </div>
       </div>
     </div>
   </body>
