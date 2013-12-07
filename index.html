@@ -8,43 +8,101 @@
   <body>
     <script>
       var logsOn = true;
-
+      function log(msg) {
+        setTimeout(function() {
+          if(logsOn) {
+            throw new Error(msg);
+          }
+        }, 0);
+      }
+      //============================================================
       var twittlerScope = {};
-      twittlerScope.maxTweets = 20;
+      twittlerScope.maxTweets = 10;
       twittlerScope.lastUpdatedTime = 0;
       twittlerScope.lastUpdatedBy = '';
       twittlerScope.users = [];
-
-      log('start');
-      //getting tweets
+      twittlerScope.autoInterval = 3000;
+      twittlerScope.nameLength = 20;
+      //============================================================
       $(document).ready(function(){
+        log('loaded, begin');
+        initialState();
+        registerListeners();
+        autoStart();
+      });
+      //============================================================
+      function autoStart(){
+        log('auto start');
         setTimeout(function(){
-          log('first update'); 
           update()
-        }, 3000);
+        }, twittlerScope.autoInterval);
         setInterval(function(){
             update();
-        }, 10000);
+        }, twittlerScope.autoInterval);
+      }
 
-        //tabs
+      function initialState(){
+        //naming
+        $('.nameField').val('Anonymous');
+        changeName(true);
+         //tabs
         $('.tab').hide();
         $('.currentTab').show();
         $('.tabItem.current').addClass('activeTab');
         //itab buttons settings 
         $('.tabItem.current').data('tab', 'currentTab');
         $('.tabItem.archive').data('tab', 'archiveTab');
+      }
 
-        //tab eventv listener
+      function registerListeners(){
+        //changing names
+        $('#edit').click(function(){
+          $('#edit').hide();
+          $('#ok').show();
+          $('#cancel').show();
+          $('.nameField').show();
+          $('.nameLabel').hide();
+          $('.nameField').focus();
+
+        });
+
+        $('#ok').click(function(){
+          var msg = validateName($('.nameField').val());
+          if (msg.length > 0){
+            $('.nameAlert').text(msg);
+          }else {
+            $('.nameAlert').text('');
+            changeName(true);
+          }
+        });
+
+        $('#cancel').click(function(){
+          changeName(false);
+        });
+
+        //sending tweet
+        $('.draft').keypress(function(key){
+          if (key.which == 10 && key.ctrlKey){
+            doSend();
+          }
+        })
+
+        $('#send').click(function(){
+          doSend();
+          update();
+        })
+
+        //tabs
         $('.tabItem').click(function(){
           //tab buttons
-          $('tabItem').removeClass('activeTab');
+          $('.tabItem').removeClass('activeTab');
           $(this).addClass('activeTab');
           //tab 
           $('.tab').hide();
           $('.tab.' + $(this).data('tab')).show();
         });
 
-        //user listing
+        //user toggles
         $('.userToggle.allUser').click(function(){
           userListingClick($('.userToggle'), $('.tweet'));
         }).hover(function(){
@@ -53,9 +111,43 @@
         function(){
           userListingHover($(this), false);
         });
+      }
+      //============================================================
+      function doSend(){
+        window.visitor =  $('.nameLabel').text();
+        writeTweet($('.draft').val());
+        $('.draft').val('');
+      }
 
-        //
-      });
+      function changeName(oked){       
+        if (oked){
+          $('.nameLabel').text($('.nameField').val());
+        } else {
+          $('.nameField').val($('.nameLabel').text());
+        }
+        $('#edit').show();
+        $('#ok').hide();
+        $('#cancel').hide();
+        $('.nameField').hide();
+        $('.nameLabel').show();
+      }
+
+      function validateName(name){
+        if (name.length == 0){
+          return 'name is empty!';
+        }
+        if (name.length > twittlerScope.nameLength){
+          return 'must be less than ' + twittlerScope.nameLength + 'characters';
+        }
+        var arr = name.split('');
+        var test = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
+        for (var i = 0; i < name.length; i++){
+          if (test.indexOf(name[i]) == -1){
+            return 'can only contain alphanumeric';
+          }
+        }
+        return '';
+      }
 
       /*
       * $user: the user that was clicked
@@ -89,24 +181,26 @@
         var $newHolder = $('.newHolder');
         var $oldHolder = $('.oldHolder');
         var $archive = $('.archiveHolder');
+        //update time description
+        $('.tweet').each(function(){
+          $($(this).children()[0]).text(timeString($($(this).children()[1]).text()));
+        })
         //move former new tweets to old tweets
-        log('moving old');
         while ($newHolder.children().length > 0){
           $newHolder.children().last().prependTo($oldHolder);
         }
         //move excess tweets to archive
-        log('archiving');
         while ($oldHolder.children().length > twittlerScope.maxTweets){
           $archive.prepend($oldHolder.children().last());
         }
         //get new tweets
-        log('new tweets');
         var index = streams.home.length - 1;
         while (index >= 0 && 
                 (streams.home[index].created_at > twittlerScope.lastUpdatedTime || 
                   (streams.home[index].created_at == twittlerScope.lastUpdatedTime && streams.home[index].user != twittlerScope.lastUpdatedBy))) {
           $newHolder.append(makeTweet(streams.home[index]));
           if ($('.userToggle.' + streams.home[index].user).size() == 0){
+            log('new user: ' + streams.home[index].user);
             var $newUser = makeUserListing(streams.home[index].user);
             $newUser.data('name', streams.home[index].user);
             $('.userList').append($newUser);
@@ -134,7 +228,8 @@
       function makeTweet(tweet){
         var $tweet = $('<div class="tweet ' + tweet.user + '"></div>');
         var tweetText = '';
-        $tweet.append($('<div class="tweetTime">' + timeStamp(tweet.created_at) + '</div>'));
+        $tweet.append($('<div class="tweetTime">' + timeString(tweet.created_at.getTime())+ '</div>'));
+        $tweet.append($('<div class="tweetTimeStamp hide">' + tweet.created_at.getTime() + '</div>'));
         $tweet.append($('<div class="tweetUser">' + tweet.user + '</div>'));
         $tweet.append($('<div class="tweetContent">' + tweet.message + '</div>'));
         return $tweet;
@@ -147,16 +242,23 @@
         return ($('<div class="userToggle ' + username + ' toggleShow">' + username + '</div>'));
       }
 
-      function timeStamp(time){
-        return time.toString();
-      }
-
-      function log(msg) {
-        setTimeout(function() {
-          if(logsOn) {
-            throw new Error(msg);
-          }
-        }, 0);
+      function timeString(time){
+        var time = Date.now() - time;
+        var str = ' ago.'
+        log(time + ' ' +  time/60000  + ' ' +  time/3600000 + ' ' + time/(3600000 * 24));
+        if (time < 60000) {
+          return 'a few seconds ago';
+        }
+        if (time/60000 >= 1){
+          str = Math.floor(time/60000) + ((Math.floor(time/60000) == 1)? ' minute' : ' minutes') + str;
+        }
+        if (time/3600000 >= 1){
+          str = Math.floor(time/3600000) + ((Math.floor(time/3600000)) == 1? ' hour' : ' hours') + str;
+        }
+        if (time/(3600000 * 24) >= 1){
+          str = Math.floor(time/(3600000 * 24)) + ((Math.floor(time/(3600000 * 24)) == 1)? ' day' : ' days') + str;
+        }
+        return str;
       }
     </script>
     <!-- content -->
@@ -166,16 +268,29 @@
       </div>
       <div class="leftPanel">
         <div class="profile">
-          name and stuff
-        </div>
-        <div class="optionList">
-          options and stuff
+          <div class="name"> 
+            <div class="nameLabel"></div>
+            <input class="nameField" type="text"> </input>
+            <div class="nameAlert"></div>
+          </div>
+          <div class="nameButtons">
+            <div class="nameButton" id="edit">Edit Name</div>
+            <div class="nameButton" id="ok">Confirm</div>
+            <div class="nameButton" id="cancel">Cancel</div>
+          </div>
         </div>
         <div class="userList">
           <div class="userToggle allUser toggleShow">All (Click to Toggle)</div> 
         </div>
       </div>
       <div class="main">
+        <div class="myTweet">
+          <textarea class="draft"></textarea>
+          <div class="buttons">
+            <button class="button" id="clear">Clear</button>
+            <button class="button" id="send">Ctrl+Enter</br>to Send</button>
+          </div>
+        </div>
         <div class="tabMenu">
           <div class="tabItem current">Current</div>
           <div class="tabItem archive">Archive</div>

@@ -1,3 +1,11 @@
+body{
+  background-color: #cccccc;
+}
+
+.hide{
+  display: none;
+}
+
 .page{
   width: 800px;
   float: left;
@@ -5,6 +13,7 @@
 
 .header{
   background-color: red;
+  margin-bottom: 10px;
 }
 
 .leftPanel{
@@ -33,6 +42,7 @@
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   border-width: 3px;
+  background-color: #cccccc;
 }
 
 .activeTab{
@@ -44,13 +54,21 @@
   border: solid;
   border-width: 3px;
   border-color: #99ccff;
-  background-color: #ffffff;
+}
+
+.myTweet {
+  height: 70px;
 }
 
 /*left side*/
 /*profile*/
 .profile{
   background-color: blue;
+  height: 70px;
+  border-radius: 20px;
+  background-color: #99ccff;
+  margin: 0% 5% 0% 5%;
+  padding: 0% 5% 0% 5% ;
 }
 
 /*options*/
@@ -69,6 +87,10 @@
   height: 20px;
   text-align: center;
   font-size: 16px;
+  border-width: 3px;
+  padding: 3px 3px 3px 3px;
+  border: solid;
+  border-color: #00cc00;
 }
 
 .userList > .toggleShow{
@@ -79,15 +101,13 @@
 
 .userList > .toggleHide{
   text-decoration:line-through;
-  background-color: #cccccc;
+  background-color: #999999;
   color: black;
 }
 
 .userList > .hover{
   border: solid;
   border-color: #006600;
-  border-width: 3px;
-  padding: 2px 2px 2px 2px;
 }
 
 /*right side*/
@@ -108,5 +128,71 @@
   border-radius: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  margin: 5px 5px 5px 5px;
+  margin: 10px 10px 10px 10px;
+}
+
+/*input*/
+.buttons{
+  height: 100%;
+  width: 12%;
+  float: right;
+}
+
+#clear {
+  height: 35%;
+  width: 100%;
+}
+
+#send{
+  height: 65%;
+  width: 100%;
+}
+
+.draft{
+  float: left;
+  height: 90%;
+  max-height: 90%;
+  width: 85%;
+}
+
+/*name*/
+.name{
+  height: 25px;
+  width: 140px;
+  padding: 10px 10px 10px 10px; 
+}
+
+.nameLabel {
+  width: 140px;
+  height: 20px;
+}
+
+.nameField{
+  background-color: #cccccc;
+  width: 140px;
+  height: 20px;
+  max-height: 20px;
+}
+
+.nameButtons{
+  height: 30%;
+}
+
+.nameButton{
+  float: left;
+  width: 70px;
+  text-align: center;
+  background-color: #3333ff;
+  border-radius: 10px; 
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.nameAlert{
+  height: 8px;
+  font-size: 8px;
+}
+
+#edit {
+  width: 100%;
 }
