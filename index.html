@@ -16,6 +16,7 @@
       twittlerScope.users = [];
 
       log('start');
+      //getting tweets
       $(document).ready(function(){
         setTimeout(function(){
           log('first update'); 
@@ -25,21 +26,65 @@
             update();
         }, 10000);
 
+        //tabs
+        $('.tab').hide();
+        $('.currentTab').show();
+        $('.tabItem.current').addClass('activeTab');
+        //itab buttons settings 
+        $('.tabItem.current').data('tab', 'currentTab');
+        $('.tabItem.archive').data('tab', 'archiveTab');
+
+        //tab eventv listener
+        $('.tabItem').click(function(){
+          //tab buttons
+          $('tabItem').removeClass('activeTab');
+          $(this).addClass('activeTab');
+          //tab 
+          $('.tab').hide();
+          $('.tab.' + $(this).data('tab')).show();
+        });
+
+        //user listing
         $('.userToggle.allUser').click(function(){
           userListingClick($('.userToggle'), $('.tweet'));
-        })
+        }).hover(function(){
+          userListingHover($(this), true);
+        },
+        function(){
+          userListingHover($(this), false);
+        });
+
+        //
       });
 
-      function userListingClick(users, tweets, ar){
-        users.toggleClass('toggleShow', !users.first().hasClass('toggleShow'));
-        log(users.size() + '|' + users.hasClass('toggleShow'));
-        if (users.first().hasClass('toggleShow')) {
-          tweets.show();
+      /*
+      * $user: the user that was clicked
+      * $tweets: the list of tweets to show or hide
+      */
+      function userListingClick($users, $tweets){
+        $users.toggleClass('toggleShow', !$users.first().hasClass('toggleShow'));
+        $users.toggleClass('toggleHide', !$users.first().hasClass('toggleHide'));
+        log($users.size() + '|' + $users.hasClass('toggleShow'));
+        if ($users.first().hasClass('toggleShow')) {
+          $tweets.show();
         } else {
-          tweets.hide();
+          $tweets.hide();
         }
       }
 
+      function userListingHover ($user, isHover){
+        if (isHover){
+          $user.addClass('hover');
+        } else {
+          $user.removeClass('hover');
+        }
+      }
+
+      /*
+      * 1. move previous new update result to be with old results
+      * 2. check size of old results, archive extras
+      * 3. populate new results, and check is any new user comes up, create a new user tag if so
+      */
       function update(){
         var $newHolder = $('.newHolder');
         var $oldHolder = $('.oldHolder');
@@ -68,6 +113,12 @@
             $newUser.click(function(){
               userListingClick($(this), $('.tweet.' + $(this).data('name')))
             });
+            $newUser.hover(function(){
+              userListingHover($(this), true);
+            },
+            function(){
+              userListingHover($(this), false);
+            });
           }
           index -= 1;
         } 
@@ -75,6 +126,11 @@
         twittlerScope.lastUpdatedBy = streams.home[streams.home.length - 1].user;
       }
 
+      /*
+      * make a tweet $ from an object
+      *
+      * tweet: the object from the stream service
+      */
       function makeTweet(tweet){
         var $tweet = $('<div class="tweet ' + tweet.user + '"></div>');
         var tweetText = '';
@@ -84,6 +140,9 @@
         return $tweet;
       }
 
+      /*
+      * make a user $ from a name
+      */
       function makeUserListing(username){
         return ($('<div class="userToggle ' + username + ' toggleShow">' + username + '</div>'));
       }
@@ -113,16 +172,23 @@
           options and stuff
         </div>
         <div class="userList">
-          <div class="userToggle allUser toggleShow">All Users</div> 
+          <div class="userToggle allUser toggleShow">All (Click to Toggle)</div> 
         </div>
       </div>
       <div class="main">
-        <div class="holder newHolder">
-          New
+        <div class="tabMenu">
+          <div class="tabItem current">Current</div>
+          <div class="tabItem archive">Archive</div>
         </div>
-        <div class="holder oldHolder">
+        <div class="tab currentTab">
+          <div class="holder newHolder">
+          </div>
+          <div class="holder oldHolder">
+          </div>
         </div>
-        <div class="holder archiveHolder hide">
+        <div class="tab archiveTab">
+          <div class="holder archiveHolder">
+          </div>
         </div>
       </div>
     </div>
