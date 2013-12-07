@@ -15,8 +15,10 @@ body{
 }
 
 .header{
-  background-color: red;
+  background-color: #33ccff;
   margin-bottom: 10px;
+  padding: 20px 0px 20px 0px;
+  font-size: 30px;
 }
 
 .leftPanel{
@@ -122,6 +124,16 @@ body{
 .newHolder > .tweet{
   background-color: #99ffff;
 }
+
+.newHolder > .tweet > .tweetUser > .newTag{
+  display: block;
+  float: left;
+}
+
+.tweet > .tweetUser > .newTag{
+  display: none;
+}
+
 
 /*tweet*/
 .tweet{

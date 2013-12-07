@@ -21,7 +21,7 @@
       twittlerScope.lastUpdatedTime = 0;
       twittlerScope.lastUpdatedBy = '';
       twittlerScope.users = [];
-      twittlerScope.autoInterval = 3000;
+      twittlerScope.autoInterval = 5000;
       twittlerScope.nameLength = 20;
       //============================================================
       $(document).ready(function(){
@@ -230,7 +230,7 @@
         var tweetText = '';
         $tweet.append($('<div class="tweetTime">' + timeString(tweet.created_at.getTime())+ '</div>'));
         $tweet.append($('<div class="tweetTimeStamp hide">' + tweet.created_at.getTime() + '</div>'));
-        $tweet.append($('<div class="tweetUser">' + tweet.user + '</div>'));
+        $tweet.append($('<div class="tweetUser"><div class="newTag">*NEW*</div> from: ' + tweet.user + '</div>'));
         $tweet.append($('<div class="tweetContent">' + tweet.message + '</div>'));
         return $tweet;
       }
@@ -264,7 +264,7 @@
     <!-- content -->
     <div class="page">
       <div class="header">
-        Twttler
+        Twittler
       </div>
       <div class="leftPanel">
         <div class="profile">
