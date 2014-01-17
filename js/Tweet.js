@@ -3,24 +3,21 @@ Tweet.$tweet(tweet, scope)
 takes a tweet from stream and the main scope
 create a $ object with all listeners registered
 
-Tweet.unmarkNew($tweet)
-remove new tweet status from $tweet
+Tweet.updateAll()
+update all tweets new status and time description
 
-Tweet.setArchived($tweet)
-make $tweet be treated as archived 
+Tweet.toggleArchived($tweet)
+Tweet.toggleStarred($tweet)
 
-Tweet.unArchived($tweet)
-revese the archived status
-
-Tweet.updateTimeAgo($tweet)
-recalculate the time ago display on $tweet
+Tweet.updateTime($tweet, formatter)
+recalculate the time display on $tweet using the formatter
 */
 
 var Tweet = {};
 
 Tweet.$tweet = function(tweet, scope){
   var $tweet = $(
-    '<div class="new tweet current' + tweet.user + '">' + 
+    '<div class="new tweet nostar current' + tweet.user + '">' + 
       '<div class="title">' +
         '<div class="time" timeStamp="'+ tweet.created_at.getTime()  + '">' + 
             scope.timeAgo(tweet.created_at.getTime()) +
@@ -34,11 +31,14 @@ Tweet.$tweet = function(tweet, scope){
       '<div class="message">' + 
         tweet.message + 
       '</div>' +
-      '<a href="">' +
-        '<div class="buttons">' + 
+      '<div class="buttons">' + 
+        '<a href="">' + 
+          '<div class="starring">Toggle Star</div>' +
+        '</a>' + 
+        '<a href="">' + 
           '<div class="archiving">Toggle Archive</div>' +
-        '</div>' +
-      '</a>' +
+        '</a>' + 
+      '</div>' +
     '</div>' );
 
   //add effects
@@ -48,43 +48,48 @@ Tweet.$tweet = function(tweet, scope){
   })
   //hover over time change its format
   $tweet.find('.time').mouseenter(function(){
-    Tweet.displayTime($(this), scope.timeString);
+    Tweet.updateTime($(this), scope.timeString);
   })
   $tweet.find('.time').mouseleave(function(){
-    Tweet.displayTime($(this), scope.timeAgo);
+    Tweet.updateTime($(this), scope.timeAgo);
   })
-  //click button to mark as archive
+  //toggle buttons
   $tweet.find('.buttons .archiving').click(function(){
-    Tweet.setArchived($tweet);
+    Tweet.toggleArchived($tweet, true);
   })
+  $tweet.find('.buttons .archiving').click(function(){
+    Tweet.toggleStarred($tweet);
+  })
+
+  scope.listen('update', function(){
+    $(this).removeClass('new');
+    updateTime($(this).find('.time'), timeAgo);
+  });
 
   return $tweet;
 }
 
-Tweet.unmarkNew = function ($tweet){
-  $tweet.removeClass('new');
-}
-
-Tweet.updateTimeAgo = function($tweet){
-  $time = $tweet.find('.time')
-  displayTime($time, timeAgo);
-}
-
-Tweet.displayTime = function($time, formatter){
+Tweet.updateTime = function($time, formatter){
   $time.text(formatter($time.prop('timeStamp')));
 }
 
-Tweet.setArchived = function($tweet, isAuto){
-  $tweet.addClass('archived');
-  if (isAuto){
-    $tweet.addClass('auto');
+Tweet.toggleArchived = function($tweet, isButton){
+  if (isButton){
+    $tweet.removeClass('auto manual').addClass('manual');
+  } else {
+    $tweet.removeClass('auto manual').addClass('auto');
   }
-  $tweet.removeClass('current');
-  $tweet.removeClass('new');
+  if ($tweet.hasClass('current')){
+    $tweet.removeClass('new current archived');.addClass('archived');
+  } else {
+    $tweet.removeClass('current archived').addClass('current');
+  }
 }
 
-Tweet.unArchived = function($tweet){
-  $tweet.addClass('current');
-  $tweet.removeClass('archived');
-  $tweet.removeClass('auto');
+Tweet.toggleStarred = function($tweet){
+  if ($tweet.hasClass('starred')){
+    $tweet.removeClass('star nostar');.addClass('nostar');
+  } else {
+    $tweet.removeClass('star nostar');.addClass('star');
+  }
 }
