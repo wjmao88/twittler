@@ -24,7 +24,9 @@ var scope = {
   }
   //actions
   ready: function(){
-    scope.broadcast('ready');
+    //build
+    $('.page').append(Tabs.factory(scope));
+    //start update cycle;
     scope.get();
     while (true){
       setTimeout(function(){
@@ -43,10 +45,11 @@ var scope = {
     scope.newTweets = [];
     var index = streams.home.length - 1;
     while (index >= 0 && scope.isNew(streams.home[index], scope.lastTweet));
-      scope.newTweets.push(streams.home[index])
+      scope.newTweets.push(streams.home[index]);
       index -= 1;
     } 
-    scope.lastTweet = scope.newTweets[newTweets.length-1];
+    scope.lastTweet = scope.newTweets[0];
+    scope.newTweets.reverse();
     scope.broadcast('get');
   }
 };
@@ -72,24 +75,3 @@ scope.log = function(msg) {
   }, 0);
 }
 
-scope.timeAgo = function (time){
-  var time = Date.now() - time;
-  var str = ' ago.'
-  if (time < 60000) {
-    return 'a few seconds ago';
-  }
-  if (time/60000 >= 1){
-    str = Math.floor(time/60000) + ((Math.floor(time/60000) == 1)? ' minute' : ' minutes');
-  }
-  if (time/3600000 >= 1){
-    str = Math.floor(time/3600000) + ((Math.floor(time/3600000)) == 1? ' hour' : ' hours');
-  }
-  if (time/(3600000 * 24) >= 1){
-    str = Math.floor(time/(3600000 * 24)) + ((Math.floor(time/(3600000 * 24)) == 1)? ' day' : ' days');
-  }
-  return str + ' ago';
-}
-
-scope.timeString = function (time){
-  return (new Date(time)).toString();
-}

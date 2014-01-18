@@ -1,26 +1,11 @@
-/*
-Tweet.$tweet(tweet, scope) 
-takes a tweet from stream and the main scope
-create a $ object with all listeners registered
-
-Tweet.updateAll()
-update all tweets new status and time description
-
-Tweet.toggleArchived($tweet)
-Tweet.toggleStarred($tweet)
-
-Tweet.updateTime($tweet, formatter)
-recalculate the time display on $tweet using the formatter
-*/
-
 var Tweet = {};
 
-Tweet.$tweet = function(tweet, scope){
+Tweet.factory = function(scope, tweet){
   var $tweet = $(
     '<div class="new tweet nostar current' + tweet.user + '">' + 
       '<div class="title">' +
         '<div class="time" timeStamp="'+ tweet.created_at.getTime()  + '">' + 
-            scope.timeAgo(tweet.created_at.getTime()) +
+            Tweet.timeAgo(tweet.created_at.getTime()) +
         '</div>' +
         '<a href="">' + 
           '<div class="name">' + 
@@ -44,14 +29,14 @@ Tweet.$tweet = function(tweet, scope){
   //add effects
   //go to timeline when name clicked
   $tweet.find('.name').click(function(){
-    scope.displayTimeline($(this).text());
+    scope.displayTimeline($(this).text()); //scope function
   })
   //hover over time change its format
   $tweet.find('.time').mouseenter(function(){
-    Tweet.updateTime($(this), scope.timeString);
+    Tweet.updateTime($(this), Tweet.timeString);
   })
   $tweet.find('.time').mouseleave(function(){
-    Tweet.updateTime($(this), scope.timeAgo);
+    Tweet.updateTime($(this), Tweet.timeAgo);
   })
   //toggle buttons
   $tweet.find('.buttons .archiving').click(function(){
@@ -92,4 +77,26 @@ Tweet.toggleStarred = function($tweet){
   } else {
     $tweet.removeClass('star nostar');.addClass('star');
   }
+}
+
+Tweet.timeAgo = function (time){
+  var time = Date.now() - time;
+  var str = ' ago.'
+  if (time < 60000) {
+    return 'a few seconds ago';
+  }
+  if (time/60000 >= 1){
+    str = Math.floor(time/60000) + ((Math.floor(time/60000) == 1)? ' minute' : ' minutes');
+  }
+  if (time/3600000 >= 1){
+    str = Math.floor(time/3600000) + ((Math.floor(time/3600000)) == 1? ' hour' : ' hours');
+  }
+  if (time/(3600000 * 24) >= 1){
+    str = Math.floor(time/(3600000 * 24)) + ((Math.floor(time/(3600000 * 24)) == 1)? ' day' : ' days');
+  }
+  return str + ' ago';
+}
+
+Tweet.timeString = function (time){
+  return (new Date(time)).toString();
 }

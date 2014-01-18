@@ -1,13 +1,6 @@
-/*
-
-add tweets to board when first created
-show and hide archived tweets
-
-*/
-
 var Board = {};
 
-Board.factory = function(type, name){
+Board.factory = function(scope, type, name){
   var $board = $(
     '<div class="board ' + type + ' ' + name + '">' + 
       '<div class="settings">' +
@@ -15,6 +8,10 @@ Board.factory = function(type, name){
         '<input class="showArchived" type="checkbox" value="Show Archived">' + 
       '</div>' + 
     '</div>' );
+
+  if (type == 'homeType'){
+    $board.prepend(Sender.factory(scope));
+  }
 
   //effects
   $board.find('.showArchived').change(function(){
@@ -32,8 +29,8 @@ Board.factory = function(type, name){
   scope.listen('update', function(){
     $board = $(this);
     for (var i = 0; i < scope.newTweets.length; i++){
-      if ($board.hasClass('home') || $board.hasClass(newTweets[i].user)){
-        $board.prepend(Tweet.factory(newTweets[i], scope));
+      if (Board.isHomeBoard($board) || $board.hasClass(newTweets[i].user)){
+        $board.prepend(Tweet.factory(newTweets[i], scope, ));
       }
     }
     Board.updateArchive($board);
@@ -42,11 +39,15 @@ Board.factory = function(type, name){
   return $board;
 }
 
-Tweet.updateArchive = function ($board){
+Board.updateArchive = function ($board){
   $board.find('.tweet.current').slice($board.find('.maxTweets').prop('value')).each(function(){
     var $this = $(this);
     if (! $this.hasClass('new')){
       toggleArchived($this);
     }
   });
+}
+
+Board.isHomeBoard = function($board){
+  return $board.hasClass('homeType') && $board.hasClass('home') && ! $board.hasClass('timeline');
 }

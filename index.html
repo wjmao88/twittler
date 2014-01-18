@@ -4,52 +4,17 @@
     <script src="lib/jquery.js"></script>
     <script src="lib/data_generator.js"></script>
     <link rel="stylesheet" type="text/css" href="css/twittler.css">
+    <script>
+      $document.ready(function(){
+        scope.ready();
+      })
+    </script>
   </head>
   <body>
     <!-- content -->
     <div class="page">
       <div class="header">
         Twittler
-      </div>
-      <div class="leftPanel">
-        <div class="profile">
-          <div class="name"> 
-            <div class="nameLabel"></div>
-            <input class="nameField" type="text"> </input>
-            <div class="nameAlert"></div>
-          </div>
-          <div class="nameButtons">
-            <div class="nameButton" id="edit">Edit Name</div>
-            <div class="nameButton" id="ok">Confirm</div>
-            <div class="nameButton" id="cancel">Cancel</div>
-          </div>
-        </div>
-        <div class="userList">
-          <div class="userToggle allUser toggleShow">All (Click to Toggle)</div> 
-        </div>
-      </div>
-      <div class="main">
-        <div class="myTweet">
-          <textarea class="draft"></textarea>
-          <div class="buttons">
-            <button class="button" id="clear">Clear</button>
-            <button class="button" id="send">Ctrl+Enter</br>to Send</button>
-          </div>
-        </div>
-        <div class="tabMenu">
-          <div class="tabItem current">Current</div>
-          <div class="tabItem archive">Archive</div>
-        </div>
-        <div class="tab currentTab">
-          <div class="holder newHolder">
-          </div>
-          <div class="holder oldHolder">
-          </div>
-        </div>
-        <div class="tab archiveTab">
-          <div class="holder archiveHolder">
-          </div>
-        </div>
       </div>
     </div>
   </body>
