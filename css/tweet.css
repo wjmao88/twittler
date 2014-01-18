@@ -14,8 +14,17 @@
   background-color: #666666;
 }
 
+.tweet.archived .archiving{
+  background-color: #333333;
+}
+
 .tweet.star{
-  color: yellow;
+  background-color: #99ff55;
+}
+
+.tweet.star .starring{
+  color: green;
+  background-color: #55ff99;
 }
 
 .tweet.nostar{

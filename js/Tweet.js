@@ -72,6 +72,7 @@ Tweet.toggleStar = function($tweet){
   } else {
     scope.log('star')
     $tweet.removeClass('star nostar').addClass('star');
+    $tweet.removeClass('current archived').addClass('current');
   }
 }
 
@@ -94,5 +95,5 @@ Tweet.timeAgo = function (time){
 }
 
 Tweet.timeString = function (time){
-  return (new Date(time)).toString();
+  return (new Date(parseInt(time))).toString().slice(0, 24);
 }
