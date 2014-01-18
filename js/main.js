@@ -9,7 +9,7 @@ var scope = {
   },
   newTweets: [],
   //listening
-  listeners = {
+  listeners: {
     ready: [],
     get: [],
     post: []
@@ -21,7 +21,7 @@ var scope = {
     jQuery.each(scope.listeners[type], function(i, func){
       func.call();
     });    
-  }
+  },
   //actions
   ready: function(){
     //build
@@ -40,11 +40,12 @@ var scope = {
     window.visitor = user;
     writeTweet(message);
     scope.broadcast('post');
+    scope.get();
   },
   get: function (){
     scope.newTweets = [];
     var index = streams.home.length - 1;
-    while (index >= 0 && scope.isNew(streams.home[index], scope.lastTweet));
+    while (index >= 0 && scope.isNew(streams.home[index], scope.lastTweet)){
       scope.newTweets.push(streams.home[index]);
       index -= 1;
     } 
@@ -55,6 +56,9 @@ var scope = {
 };
 
 scope.isNew = function(tweet, lastTweet){
+  if (lastTweet == undefined){
+    return true;
+  }
   if (tweet.created_at > lastTweet.created_at){
     return true;
   }

@@ -14,7 +14,7 @@ Sender.factory = function(scope){
       '<textarea class=".draft">' + 
       '</textarea>' + 
       '<a href=""><div class="send"></div></a>' + 
-    '</div>' + 
+    '</div>' 
     );
 
   $sender.find('.editor').hide();
@@ -74,7 +74,7 @@ Sender.validateName = function (name){
   var arr = name.split('');
   var allowed = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
   jQuery.each(arr, function(i, letter){
-    if (allowed.indexOf(letter == -1){
+    if (allowed.indexOf(letter) == -1){
       return false;
     }
   })

@@ -13,7 +13,7 @@ Tabs.factory = function(scope){
   $tabs.children('.tabHolder').append(Board.factory(scope, 'homeType', 'home'));
 
   //event
-  $tabs.find('.tabMenu .select').click(){
+  $tabs.find('.tabMenu .select').click(function(){
     var user = $(this).prop('name');
     $(this).addClass('selected');
     jQuery.each($tabs.find('.tabHolder > .board'), function(i, $board){
@@ -22,20 +22,19 @@ Tabs.factory = function(scope){
 
     if (user == undefined && $(this).prop('type') == 'home'){
       $board = $tabs.find('.board.homeType.home').show();
-    } else 
+    } else {
       $board = $tabs.find('.board.timeline.' + name).show();
     }
-  }
-
-  $tabs.find('.tabMenu .select').mouseenter(function(){
-    $(this).addClass('hover');
   });
-  $tabs.find('.tabMenu .select').mouseleave(function(){
+
+  $tabs.find('.tabMenu .select').hover(function(){
+    $(this).addClass('hover');
+  }, function(){
     $(this).removeClass('hover');
   });
 
   //listen
-  scope.listen('update', function(){
+  scope.listen('get', function(){
     var newUsers = jQuery.map(scope.newTweets, function(tweet){
       return tweet.user;
     });
@@ -47,7 +46,7 @@ Tabs.factory = function(scope){
         $newBoard.hide();
         //add new button
         $newButton = '<a href=""><div class="select" name="' + user + '">' + user + '</div></a>'
-        $board.children('tabMenu').append($newButton);
+        $tabs.children('tabMenu').append($newButton);
       }
     })
   })

@@ -20,21 +20,21 @@ Board.factory = function(scope, type, name){
     } else {
       Board.viewArchive($board, false);
     }
-  })
-  $board.find('.maxTweets').blur(function()){
+  });
+  $board.find('.maxTweets').blur(function(){
     Board.updateArchive($board);
-  }
+  });
 
   //
-  scope.listen('update', function(){
+  scope.listen('get', function(){
     $board = $(this);
     for (var i = 0; i < scope.newTweets.length; i++){
-      if (Board.isHomeBoard($board) || $board.hasClass(newTweets[i].user)){
-        $board.prepend(Tweet.factory(newTweets[i], scope, ));
+      if (Board.isHomeBoard($board) || $board.hasClass(scope.newTweets[i].user)){
+        $board.prepend(Tweet.factory(scope, scope.newTweets[i]));
       }
     }
     Board.updateArchive($board);
-  })
+  });
 
   return $board;
 }

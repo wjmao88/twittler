@@ -32,12 +32,11 @@ Tweet.factory = function(scope, tweet){
     scope.displayTimeline($(this).text()); //scope function
   })
   //hover over time change its format
-  $tweet.find('.time').mouseenter(function(){
+  $tweet.find('.time').hover(function(){
     Tweet.updateTime($(this), Tweet.timeString);
-  })
-  $tweet.find('.time').mouseleave(function(){
+  }, function(){
     Tweet.updateTime($(this), Tweet.timeAgo);
-  })
+  });
   //toggle buttons
   $tweet.find('.buttons .archiving').click(function(){
     Tweet.toggleArchived($tweet, true);
@@ -46,7 +45,7 @@ Tweet.factory = function(scope, tweet){
     Tweet.toggleStarred($tweet);
   })
 
-  scope.listen('update', function(){
+  scope.listen('get', function(){
     $(this).removeClass('new');
     updateTime($(this).find('.time'), timeAgo);
   });
@@ -65,7 +64,7 @@ Tweet.toggleArchived = function($tweet, isButton){
     $tweet.removeClass('auto manual').addClass('auto');
   }
   if ($tweet.hasClass('current')){
-    $tweet.removeClass('new current archived');.addClass('archived');
+    $tweet.removeClass('new current archived').addClass('archived');
   } else {
     $tweet.removeClass('current archived').addClass('current');
   }
@@ -73,9 +72,9 @@ Tweet.toggleArchived = function($tweet, isButton){
 
 Tweet.toggleStarred = function($tweet){
   if ($tweet.hasClass('starred')){
-    $tweet.removeClass('star nostar');.addClass('nostar');
+    $tweet.removeClass('star nostar').addClass('nostar');
   } else {
-    $tweet.removeClass('star nostar');.addClass('star');
+    $tweet.removeClass('star nostar').addClass('star');
   }
 }
 
