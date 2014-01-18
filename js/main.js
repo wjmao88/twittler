@@ -1,4 +1,5 @@
 var scope = {
+  throwingLog: false;
   settings: {
     'maxTweets': 10,
     'lastUpdatedTime': 0,
@@ -81,7 +82,7 @@ scope.isNew = function(tweet, lastTweet){
 
 scope.log = function(msg) {
   setTimeout(function() {
-    if(true) {
+    if(scope.throwingLog) {
       throw new Error(msg);
     }
   }, 0);
