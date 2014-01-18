@@ -2,34 +2,28 @@ var Tweet = {};
 
 Tweet.factory = function(scope, tweet){
   var $tweet = $(
-    '<div class="new tweet nostar current' + tweet.user + '">' + 
+    '<div class="new tweet nostar current ' + tweet.user + '">' + 
       '<div class="title">' +
-        '<div class="time" timeStamp="'+ tweet.created_at.getTime()  + '">' + 
+        '<div class="name button">' + 
+          tweet.user + 
+        '</div>' + 
+         '<div class="time" timeStamp="'+ tweet.created_at.getTime()  + '">' + 
             Tweet.timeAgo(tweet.created_at.getTime()) +
         '</div>' +
-        '<a href="">' + 
-          '<div class="name">' + 
-            tweet.user + 
-          '</div>' + 
-        '</a>' +
       '</div>' +
       '<div class="message">' + 
         tweet.message + 
       '</div>' +
       '<div class="buttons">' + 
-        '<a href="">' + 
-          '<div class="starring">Toggle Star</div>' +
-        '</a>' + 
-        '<a href="">' + 
-          '<div class="archiving">Toggle Archive</div>' +
-        '</a>' + 
+        '<div class="starring button">Star</div>' +
+        '<div class="archiving button">Archive</div>' +
       '</div>' +
     '</div>' );
 
   //add effects
   //go to timeline when name clicked
   $tweet.find('.name').click(function(){
-    scope.displayTimeline($(this).text()); //scope function
+    Tabs.changeTab($(this).text(), 'timeLine', scope.$tabs); //outside function
   })
   //hover over time change its format
   $tweet.find('.time').hover(function(){
@@ -41,20 +35,21 @@ Tweet.factory = function(scope, tweet){
   $tweet.find('.buttons .archiving').click(function(){
     Tweet.toggleArchived($tweet, true);
   })
-  $tweet.find('.buttons .archiving').click(function(){
-    Tweet.toggleStarred($tweet);
+  $tweet.find('.buttons .starring').click(function(){
+    Tweet.toggleStar($tweet);
   })
 
   scope.listen('get', function(){
+    scope.log('tweet callback on get');
     $(this).removeClass('new');
     updateTime($(this).find('.time'), timeAgo);
-  });
+  }, '%%%%%%%%%%%%%%%%%%%%%%tweet listen to get');
 
   return $tweet;
 }
 
 Tweet.updateTime = function($time, formatter){
-  $time.text(formatter($time.prop('timeStamp')));
+  $time.text(formatter($time.attr('timeStamp')));
 }
 
 Tweet.toggleArchived = function($tweet, isButton){
@@ -70,10 +65,12 @@ Tweet.toggleArchived = function($tweet, isButton){
   }
 }
 
-Tweet.toggleStarred = function($tweet){
-  if ($tweet.hasClass('starred')){
+Tweet.toggleStar = function($tweet){
+  if ($tweet.hasClass('star')){
+    scope.log('nostar')
     $tweet.removeClass('star nostar').addClass('nostar');
   } else {
+    scope.log('star')
     $tweet.removeClass('star nostar').addClass('star');
   }
 }

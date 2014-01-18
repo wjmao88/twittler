@@ -3,12 +3,16 @@
   <head>
     <script src="lib/jquery.js"></script>
     <script src="lib/data_generator.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/twittler.css">
     <script src="js/main.js"></script>
     <script src="js/tabs.js"></script>
     <script src="js/board.js"></script>
     <script src="js/sender.js"></script>
     <script src="js/tweet.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/tweet.css">
+    <link rel="stylesheet" type="text/css" href="css/sender.css">
+    <link rel="stylesheet" type="text/css" href="css/board.css">
+    <link rel="stylesheet" type="text/css" href="css/tabs.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script>
       $(document).ready(function(){
         scope.ready();
@@ -21,6 +25,13 @@
       <div class="header">
         Twittler
       </div>
+      <div class="settings hide">
+        <div class="label">Show Tooltips</div>
+        <input class="showTooltip" type="checkbox" checked>
+      </div>
+    </div>
+    <div class="footer">
+      a nice footer
     </div>
   </body>
 </html>

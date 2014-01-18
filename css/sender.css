@@ -1,0 +1,34 @@
+.sender{
+  padding: 10px;
+  margin: 0 15px;
+  border: dotted 2px yellow;
+  border-radius: 50px;
+}
+
+.sender .profile{
+  text-align: center;
+}
+
+.sender .profile .name.button{
+  margin: 0 auto 10px;
+  width: 240px;
+}
+
+.sender .profile .editor .editName{
+  font-size: 20px;
+}
+
+.sender .profile .editor .label{
+  font-size: 12px;
+}
+
+.sender .draft{
+  width: 96%;
+  margin: 0 2%;
+  overflow: scroll;
+}
+
+body .page .sender .send.button{
+  width: 240px;
+  margin: 0 auto;
+}

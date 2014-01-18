@@ -1,53 +1,67 @@
 var Board = {};
-
 Board.factory = function(scope, type, name){
   var $board = $(
-    '<div class="board ' + type + ' ' + name + '">' + 
-      '<div class="settings">' +
-        '<input class="maxTweets" type="text" value="10">' + 
-        '<input class="showArchived" type="checkbox" value="Show Archived">' + 
+    '<div class="board ' + type + ' ' + name + '" + type="' + type + '">' + 
+      '<div class="boardTitle">' + 
+        '<div class="title">' + name + '</div>' +
+        '<div class="settings">' +
+          '<div class="label">Max tweets: </div>' + 
+          '<input class="maxTweets" type="text" value="10">' + 
+          '<div class="label">Show Archived</div>' + 
+          '<input class="showArchived" type="checkbox">' + 
+        '</div>' + 
       '</div>' + 
     '</div>' );
 
+
+  $board.prepend($());
+
   if (type == 'homeType'){
-    $board.prepend(Sender.factory(scope));
-  }
+    $board.children().first().prepend(Sender.factory(scope));
+    scope.temp = $board;
+  } 
 
   //effects
   $board.find('.showArchived').change(function(){
-    if ($(this).is('checked')){
-      Board.viewArchive($board, true);
-    } else {
-      Board.viewArchive($board, false);
-    }
+    Board.viewArchive($board, $(this).prop('checked'));
   });
   $board.find('.maxTweets').blur(function(){
-    Board.updateArchive($board);
+    scope.log('new max tweets: ' + $(this).val());
+    Board.autoArchive($board);
   });
 
   //
   scope.listen('get', function(){
-    $board = $(this);
-    for (var i = 0; i < scope.newTweets.length; i++){
-      if (Board.isHomeBoard($board) || $board.hasClass(scope.newTweets[i].user)){
-        $board.prepend(Tweet.factory(scope, scope.newTweets[i]));
-      }
-    }
-    Board.updateArchive($board);
-  });
+    Board.getTweets ($board, type, name);
+  }, 'board ' + type + ' ' + name);
+  Board.getTweets ($board, type, name);
 
   return $board;
 }
 
-Board.updateArchive = function ($board){
-  $board.find('.tweet.current').slice($board.find('.maxTweets').prop('value')).each(function(){
+Board.getTweets = function ($board, type, name){
+  for (var i = 0; i < scope.newTweets.length; i++){
+    scope.log(name + ' board try to add tweet by ' + scope.newTweets[i].user);
+    if (type == 'homeType' || $board.hasClass(scope.newTweets[i].user)){
+      scope.log('add tweet by ' + scope.newTweets[i].user);
+      $board.children().first().after(Tweet.factory(scope, scope.newTweets[i]));
+    }
+  }
+  Board.autoArchive($board);
+}
+
+Board.autoArchive = function ($board){
+  scope.log('auto archive on limit: ' + $board.find('.maxTweets').val());
+  $board.find('.tweet.current.nostar').slice($board.find('.maxTweets').val()).each(function(){
     var $this = $(this);
     if (! $this.hasClass('new')){
       toggleArchived($this);
     }
   });
+  Board.viewArchive($board);
 }
 
-Board.isHomeBoard = function($board){
-  return $board.hasClass('homeType') && $board.hasClass('home') && ! $board.hasClass('timeline');
+Board.viewArchive = function($board, show){
+  show = show == undefined? $board.find('.showArchived').prop('checked') : show;
+  $board.find('.tweet.archived').toggle(show);
 }

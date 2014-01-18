@@ -1,0 +1,33 @@
+.board{
+  text-align: center;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  border-width: 3px;
+  background-color: #cccccc;
+}
+
+.board .boardTitle{
+  text-align: center;
+  width: 100%;
+  min-height: 100px;;
+  padding: 15px 0;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  background-color: #33ccff;
+}
+
+.board .boardTitle .title{
+  padding: 15px;
+  font-size: 30px;
+}
+
+.board .boardTitle .settings *{
+  display: inline-block;
+  font-size: 12px;
+}
+
+.board .boardTitle .settings input{
+  text-align: right;
+  width: 30px;
+  margin: 0 25px 0 5px;
+}

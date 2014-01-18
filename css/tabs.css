@@ -1,0 +1,39 @@
+.tabs{
+  padding: 0 30px;
+}
+
+.tabMenu{
+  float: left;
+  background-color: #33ccff;
+  border-radius: 50px;
+  padding: 30px 15px;
+  position: relative;
+  width: 160px;
+}
+
+.tabHolder{
+  float: right;
+}
+
+.tabs .tabMenu .select{
+  text-align: left;
+  padding: 5px 20px;
+  margin: 5px 5px;
+  display: inline-block;
+}
+
+.tabs .tabMenu .select:hover{
+  text-align: center;
+  width: 240px;
+  z-index: 1000;
+}
+
+.tabs .tabHolder .button{
+  width: 50px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.tabs .tabHolder .name.button{
+  width: 240px;
+}

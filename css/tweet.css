@@ -1,0 +1,68 @@
+.tweet{
+  width: 500px;
+  margin: 20px;
+  text-align: left;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+
+.tweet.current{
+  background-color: #ccffff;
+}
+
+.tweet.archived{
+  background-color: #666666;
+}
+
+.tweet.star{
+  color: yellow;
+}
+
+.tweet.nostar{
+  color: black;
+}
+
+.tweet > div{
+  padding: 5px 20px;
+}
+
+.tweet .buttons{
+  text-align: right;
+}
+.tweet .buttons div{
+  display: inline-block;
+  margin: 0px 20px;
+}
+
+.tweet .buttons .starring{
+
+}
+
+.tweet .buttons .archiving{
+
+}
+
+.tweet .message{
+}
+
+.tweet .title{
+  height: 40px;
+}
+
+.tweet .title .time{
+  float: right;
+  text-align: right;
+  width: 200px;
+  font-size: 13px;
+}
+
+.tweet .title .name{
+  float: left;
+  text-align: center;
+  width: 200px;
+}
+
+.tweet .new{
+  
+}
+

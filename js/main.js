@@ -12,29 +12,37 @@ var scope = {
   listeners: {
     ready: [],
     get: [],
-    post: []
+    post: [],
+    tab:[]
   },
-  listen: function(type, func){
+  listen: function(type, func, msg){
+    if (msg){
+      scope.log('======listen:' + msg);
+    }
     scope.listeners[type].push(func);
   },
   broadcast: function(type){  
+    scope.log('!!!!!!braodcasting ' + type);
     jQuery.each(scope.listeners[type], function(i, func){
+      scope.log(type + ' ' + i);
       func.call();
     });    
   },
   //actions
   ready: function(){
     //build
-    $('.page').append(Tabs.factory(scope));
+    scope.$tabs = Tabs.factory(scope);
+    $('.page').append(scope.$tabs);
     //start update cycle;
+    scope.log(window.streams.home.length);
     scope.get();
-    while (true){
-      setTimeout(function(){
-        if (scope.autoUpdate == true) {
-          scope.get();
-        }
-      }, scope.settings.autoInterval);
-    } 
+    // while (true){
+    //   setTimeout(function(){
+    //     if (scope.autoUpdate == true) {
+    //       scope.get();
+    //     }
+    //   }, scope.settings.autoInterval);
+    // } 
   },
   post: function(user, message){
     window.visitor = user;

@@ -8,7 +8,6 @@ Tabs.factory = function(scope){
       '<div class="tabHolder">' + 
       '</div>' + 
     '</div>' );
-
   $tabs.children('.tabHolder').append(Board.factory(scope, 'homeType', 'home'));
   $tabs.children('.tabMenu').append(Tabs.buttonFactory('Home', 'homeType', $tabs));
 
@@ -32,28 +31,33 @@ Tabs.factory = function(scope){
   return $tabs;
 };
 
+Tabs.changeTab = function(user, type, $tabs){
+  scope.log('change tab to ' + type + ' ' + user);
+  $tabs.find('.tabHolder > .board').hide();
+  if (type == 'homeType'){
+    $tabs.find('.board.homeType.home').show();
+  } else {
+    $tabs.find('.board.timeline.' + user).show();
+  }
+}
+
 Tabs.buttonFactory = function(user, type, $tabs){
-  $button = $('<div class="select button" name="' + user + '" type="' + type + '">' + user + '</div>');
+  $button = $(
+    '<div class="select name button" name="' + user + '" type="' + type + '">' + 
+      user.slice(0, 10) + 
+    '</div>');
 
   $button.click(function(){
-    var user = $(this).attr('name');
-    var type = $(this).attr('type')
-    scope.log('change to ' + type + ' ' + user);
-    $(this).addClass('selected');
-
-    $tabs.find('.tabHolder > .board').hide();
-    if ($(this).attr('type') == 'homeType'){
-      scope.temp = $tabs;
-      $tabs.find('.board.homeType.home').show();
-    } else {
-      $tabs.find('.board.timeline.' + user).show();
-    }
+    $button.addClass('selected');
+    Tabs.changeTab($button.attr('name'), $button.attr('type'), $tabs);
   });
 
   $button.hover(function(){
-    $(this).addClass('hover');
+    $button.addClass('hover');
+    $button.text($button.attr('name'));
   }, function(){
-    $(this).removeClass('hover');
+    $button.removeClass('hover');
+    $button.text($button.attr('name').slice(0, 10));
   });
 
   return $button;
