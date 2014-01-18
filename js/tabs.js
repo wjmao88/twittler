@@ -42,7 +42,7 @@ Tabs.changeTab = function(user, type, $tabs){
 }
 
 Tabs.buttonFactory = function(user, type, $tabs){
-  $button = $(
+  var $button = $(
     '<div class="select name button" name="' + user + '" type="' + type + '">' + 
       user.slice(0, 10) + 
     '</div>');

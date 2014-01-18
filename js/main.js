@@ -1,5 +1,5 @@
 var scope = {
-  throwingLog: false;
+  throwingLog: false,
   settings: {
     'maxTweets': 10,
     'lastUpdatedTime': 0,
