@@ -38,6 +38,7 @@ Tabs.changeTab = function(user, type, $tabs){
   } else {
     $tabs.find('.board.timeline.' + user).show();
   }
+  scope.get();
 }
 
 Tabs.buttonFactory = function(user, type, $tabs){
