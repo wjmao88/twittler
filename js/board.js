@@ -23,10 +23,12 @@ Board.factory = function(scope, type, name){
 
   //effects
   $board.find('.showArchived').change(function(){
-    Board.viewArchive($board, $(this).prop('checked'));
+    $board.find('.tweet.archived').toggle($(this).prop('checked'));
   });
   $board.find('.maxTweets').blur(function(){
-    scope.log('new max tweets: ' + $(this).val());
+    scope.log('new max tweets: ' + $(this).val() + ' ' + $(this).attr('value'));
+    //$(this).attr('value', $(this).val());
+    scope.log('new max tweets: ' + $(this).val() + ' ' + $(this).attr('value'));
     Board.autoArchive($board);
   });
 
@@ -43,7 +45,6 @@ Board.getTweets = function ($board, type, name){
   for (var i = 0; i < scope.newTweets.length; i++){
     scope.log(name + ' board try to add tweet by ' + scope.newTweets[i].user);
     if (type == 'homeType' || $board.hasClass(scope.newTweets[i].user)){
-      scope.log('add tweet by ' + scope.newTweets[i].user);
       $board.children().first().after(Tweet.factory(scope, scope.newTweets[i]));
     }
   }
@@ -51,17 +52,25 @@ Board.getTweets = function ($board, type, name){
 }
 
 Board.autoArchive = function ($board){
-  scope.log('auto archive on limit: ' + $board.find('.maxTweets').val());
-  $board.find('.tweet.current.nostar').slice($board.find('.maxTweets').val()).each(function(){
-    var $this = $(this);
-    if (! $this.hasClass('new')){
-      toggleArchived($this);
-    }
-  });
-  Board.viewArchive($board);
-}
-
-Board.viewArchive = function($board, show){
-  show = show == undefined? $board.find('.showArchived').prop('checked') : show;
-  $board.find('.tweet.archived').toggle(show);
+  var currentNum = $board.find('.tweet.current.nostar').length;
+  var maxTweets = $board.find('.maxTweets').val();
+  scope.log('get to ' + maxTweets + ' tweets, has ' + currentNum);
+  if (currentNum > maxTweets) { //put into archive
+    scope.log('kill');
+    $($board.find('.tweet.current.nostar').slice(maxTweets)).each(function(i, tweet){
+      if (! $(tweet).hasClass('new')){
+        Tweet.toggleArchived($(tweet));
+        $(tweet).hide();
+      }
+    });
+  } else { //bring back from archive
+    scope.log('revive');
+    $archives = $board.find('.tweet.archived.auto');
+    scope.log('archive size: ' + $archives.length);
+    $($archives.slice(0, maxTweets - currentNum)).each(function(i, tweet){
+      scope.log('reviving' + i);
+      Tweet.toggleArchived($(tweet));
+      $(tweet).show();
+    });
+  }
 }

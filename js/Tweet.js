@@ -39,11 +39,11 @@ Tweet.factory = function(scope, tweet){
     Tweet.toggleStar($tweet);
   })
 
-  scope.listen('get', function(){
-    scope.log('tweet callback on get');
-    $(this).removeClass('new');
-    updateTime($(this).find('.time'), timeAgo);
-  }, '%%%%%%%%%%%%%%%%%%%%%%tweet listen to get');
+  var id = scope.listenerId++;
+  scope.listen('preGet', function(){
+    $tweet.removeClass('new');
+    Tweet.updateTime($tweet.find('.time'), Tweet.timeAgo);
+  });
 
   return $tweet;
 }
@@ -67,10 +67,8 @@ Tweet.toggleArchived = function($tweet, isButton){
 
 Tweet.toggleStar = function($tweet){
   if ($tweet.hasClass('star')){
-    scope.log('nostar')
     $tweet.removeClass('star nostar').addClass('nostar');
   } else {
-    scope.log('star')
     $tweet.removeClass('star nostar').addClass('star');
     $tweet.removeClass('current archived').addClass('current');
   }

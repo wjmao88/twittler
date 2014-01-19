@@ -1,5 +1,6 @@
 var scope = {
-  throwingLog: false,
+  throwingLog: true,
+  listenerId: 0,
   settings: {
     'maxTweets': 10,
     'lastUpdatedTime': 0,
@@ -12,6 +13,7 @@ var scope = {
   //listening
   listeners: {
     ready: [],
+    preGet: [],
     get: [],
     post: [],
     tab:[]
@@ -24,9 +26,9 @@ var scope = {
   },
   broadcast: function(type){  
     scope.log('!!!!!!braodcasting ' + type);
+    scope.log(scope.listeners[type].length);
     jQuery.each(scope.listeners[type], function(i, func){
-      scope.log(type + ' ' + i);
-      func.call();
+      scope.log('++++++++++calling ' + func(1));
     });    
   },
   //actions
@@ -35,15 +37,13 @@ var scope = {
     scope.$tabs = Tabs.factory(scope);
     $('.page').append(scope.$tabs);
     //start update cycle;
-    scope.log(window.streams.home.length);
+    scope.log('new tweets: ' + window.streams.home.length);
     scope.get();
-    // while (true){
-    //   setTimeout(function(){
-    //     if (scope.autoUpdate == true) {
-    //       scope.get();
-    //     }
-    //   }, scope.settings.autoInterval);
-    // } 
+    setInterval(function(){
+      if (scope.autoUpdate == true) {
+          scope.get();
+      }
+    }, scope.settings.autoInterval);
   },
   post: function(user, message){
     window.visitor = user;
@@ -52,6 +52,7 @@ var scope = {
     scope.get();
   },
   get: function (){
+    scope.broadcast('preGet');
     scope.newTweets = [];
     var index = streams.home.length - 1;
     while (index >= 0 && scope.isNew(streams.home[index], scope.lastTweet)){

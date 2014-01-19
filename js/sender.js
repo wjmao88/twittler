@@ -71,21 +71,21 @@ Sender.doSend = function($sender, scope){
 Sender.validateName = function (name){
   scope.log(name);
   if (name.length == 0){
-    scope.log('too short');
+    scope.log('too short: ' + name);
     return false;
   }
   if (name.length > 20){
-    scope.log('too long');
+    scope.log('too long: ' + name);
     return false;
   }
   var arr = name.split('');
   var allowed = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890'
   jQuery.each(arr, function(i, letter){
     if (allowed.indexOf(letter) == -1){
-      scope.log(letter +' is not allowed');
+      scope.log(letter +' is not allowed: ' + name);
       return false;
     }
   })
-  scope.log('good name');
+  scope.log('good name: ' + name);
   return true;
 }

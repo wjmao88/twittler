@@ -13,7 +13,6 @@ Tabs.factory = function(scope){
 
   //listen
   scope.listen('get', function(){
-    scope.log('add new users');
     var newUsers = jQuery.map(scope.newTweets, function(tweet){
       return tweet.user;
     });
