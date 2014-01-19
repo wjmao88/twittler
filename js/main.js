@@ -1,6 +1,5 @@
 var scope = {
-  throwingLog: true,
-  listenerId: 0,
+  throwingLog: false,
   settings: {
     'maxTweets': 10,
     'lastUpdatedTime': 0,
@@ -26,9 +25,8 @@ var scope = {
   },
   broadcast: function(type){  
     scope.log('!!!!!!braodcasting ' + type);
-    scope.log(scope.listeners[type].length);
     jQuery.each(scope.listeners[type], function(i, func){
-      scope.log('++++++++++calling ' + func(1));
+      func();
     });    
   },
   //actions

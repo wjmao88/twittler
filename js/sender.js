@@ -69,7 +69,6 @@ Sender.doSend = function($sender, scope){
 }
 
 Sender.validateName = function (name){
-  scope.log(name);
   if (name.length == 0){
     scope.log('too short: ' + name);
     return false;
